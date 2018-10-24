@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="newpost_form">
+    <form method='post' action="/blog">
+        <label>
+            Title for your new blog: <br>
+            <input type="text" name="blog_title" value="{{blog_title}}" maxlength="120" class="input_post"/>
+            <p class='error'>{{error_title}}</p>
+        </label>
+        <label>
+            Your new blog: <br>
+            <textarea name="blog_body" value="{{blog_body}}" maxlength="1000" class="input_post" rows="10"></textarea>
+            <p class='error'>{{error_body}}</p>
+        </label>  
+        <input type='submit' class='btnBlue' value="Add Entry" />
+    </form>
+</div>    
+{% endblock %}
