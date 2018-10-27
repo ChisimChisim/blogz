@@ -25,7 +25,15 @@ h1{
     padding:0 10px;
 }
 
-.newpost_form{
+.blog_list small{
+    padding:0 10px;
+}
+
+.blog_list span{
+    padding:0 20px;
+}
+
+.form{
     margin:0 auto;
     text-align: center;
 }
@@ -41,6 +49,17 @@ h1{
 
 .error{
     color: red;
+}
+
+ul li {
+    margin: 0;
+    padding: 0;
+}
+
+.error_list{
+    text-align: left;
+    width:300px;
+    margin:10px auto;
 }
 
 .btnBlue{

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Login</h1>
+
+{% with messages = get_flashed_messages(with_categories=True) %}
+<div class='error_list'>
+    <ul>
+        {% for category, message in messages%}
+        <li class="{{category}}">{{message}}</li>
+        {% endfor %}
+    </ul>  
+</div> 
+{% endwith %}
+
+<div class="form" >
+<form action="/login" method="post">
+    <label for="username">
+        Username
+        <p><input id="username" name="username" type="text" class="input_post"></p>
+    </label>
+    <label for="password">
+        Password
+        <p><input id="password" name="password" type="password" class="input_post"></p>
+    </label>
+    <input type="submit" class="btnBlue" value="Login">
+</form>
+<p>Don't have an account? <a href="/signup">Create one!</a></p>
+</div>
+{% endblock %} 

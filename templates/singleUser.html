@@ -1,17 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Buid a Blog</h1>
+    <h1>Blog posts!</h1>
     {% for blog in blogs %}
     <div class='blog_list'>
         <a href="/blog?id={{blog.id}}"><h2>{{blog.title}}</h2></a>
         <p>{{blog.body}}</p>
-        <small>written by <a href="/blog?user={{blog.owner.username}}">{{blog.owner.username}}</a>  
+        <small>written by <a href="/blog?user={{blog.owner.username}}">{{blog.owner.username}}</a>
             <span>{{blog.reg_date}}</span></small>
-
     </div>
     {% endfor %}
-
-    
 
 {% endblock %}
