@@ -2,7 +2,25 @@
 
 {% block content %}
     <h1>Blog posts!</h1>
-    {% for blog in blogs %}
+
+<!-- This is from the Flask-SqlAlchemy documentation -->
+<div class=pagination>
+    {%- for page in blogs.iter_pages() %}
+    {% if page %}
+        {% if page != blogs.page %}
+        <a href="{{ url_for("list_blogs", page=page) }}">{{ page }}</a>
+        {% else %}
+        <strong>{{ page }}</strong>
+        {% endif %}
+    {% else %}
+        <span class=ellipsis>…</span>
+    {% endif %}
+    {%- endfor %}
+</div>
+<!-- END  -->
+
+
+    {% for blog in blogs.items %}
     <div class='blog_list'>
         <a href="/blog?id={{blog.id}}"><h2>{{blog.title}}</h2></a>
         <p>{{blog.body}}</p>

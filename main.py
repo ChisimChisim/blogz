@@ -1,6 +1,7 @@
 from flask import Flask, request, redirect, render_template, session, flash
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy, Pagination
 from datetime import datetime
+from hashutils import make_pw_hash, check_pw_hash
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -29,12 +30,12 @@ class Blog(db.Model):
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(120), unique=True)
-    password = db.Column(db.String(120))
+    pw_hash = db.Column(db.String(120))
     blogs = db.relationship('Blog', backref="owner")
 
     def __init__(self, username, password):
         self.username = username
-        self.password = password        
+        self.pw_hash = make_pw_hash(password)        
 
 @app.before_request
 def require_login():
@@ -50,7 +51,7 @@ def login():
         user = User.query.filter_by(username=username).first()
         if not user:
             flash("This username does not exist", 'error')
-        elif user.password != password:
+        elif not check_pw_hash(password, user.pw_hash):
             flash("The password is incorrect", 'error')
         else:    
             session['username'] = username
@@ -100,26 +101,31 @@ def logout():
     del session['username']
     return redirect('/blog')         
 
-@app.route('/blog')
-def list_blogs():
 
+@app.route('/blog', defaults={'page': 1})
+@app.route('/blog/<int:page>')
+def list_blogs(page):
+
+    per_page=5  #limiting posts to 5 per page
+   
     if request.args.get('id'):
         id = request.args.get('id')
         blog = Blog.query.filter_by(id=id).first()
         return render_template('blog_entry.html',title="blog.title", blog=blog) 
     elif request.args.get('user'): 
         username = request.args.get('user')
-        blogs =  Blog.query.join(User, Blog.owner_id==User.id).filter(User.username==username)
+        blogs =  Blog.query.join(User, Blog.owner_id==User.id).filter(User.username==username).order_by(db.desc(Blog.reg_date)).paginate(page, per_page)
         return render_template('singleUser.html',title="Blog posts!", blogs=blogs) 
     else:
-        blogs = Blog.query.order_by(db.desc(Blog.reg_date)).all()
+        blogs = Blog.query.order_by(db.desc(Blog.reg_date)).paginate(page, per_page)
         return render_template('blog_list.html',title="Buid a Blog", blogs=blogs)
+
 
 @app.route('/blog', methods=['POST'])
 def add_blog():
     blog_title = request.form['blog_title']
     blog_body = request.form['blog_body']
-    #Validation for title
+    #Validation for title&body
     error_title = ''
     error_body = ''
     if not blog_title:
@@ -138,13 +144,6 @@ def add_blog():
         reg_id = new_blog.id
 
     return redirect('/blog?id=' + str(reg_id))
-
-@app.route('/blog', methods=['GET'])
-def show_blog():
-    id = request.args.get('id')
-    blog = Blog.query.filter_by(id=id).first()
-    return render_template('blog_entry.html',title="blog.title", blog=blog) 
-
 
 @app.route('/newpost')
 def newpost_form():

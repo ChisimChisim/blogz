@@ -3,8 +3,22 @@ body{
     padding: 10px;
 }
 
-nav a{
-    padding:10px;
+nav ul{
+    list-style: none;
+    display: flex;
+    flex-flow: row;
+    margin: 0;
+    padding: 20px 10px 0 10px;
+}
+
+nav li a{
+    display: block;
+    padding:10px 20px;
+    text-decoration: none;
+}
+
+nav li.login{
+    margin-left:auto;
 }
 
 a:hover{
@@ -29,7 +43,8 @@ h1{
     padding:0 10px;
 }
 
-.blog_list span{
+.blog_list span,
+.blog_entity span{
     padding:0 20px;
 }
 
@@ -46,7 +61,6 @@ h1{
     margin: 5px;
 }
 
-
 .error{
     color: red;
 }
@@ -60,6 +74,14 @@ ul li {
     text-align: left;
     width:300px;
     margin:10px auto;
+}
+
+.pagination{
+    text-align: center;
+}
+
+.blog_entity{
+    margin-top:50px;
 }
 
 .btnBlue{
